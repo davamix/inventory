@@ -10,10 +10,18 @@
     </head>
 
     <body>
-        <div class="container">
-            <div class="row justify-content-md-center">
-                <video class="text-center border border-primary" id="video" autoplay="true"></video>
+        <div class="container m-3">
+            <div class="row justify-content-start">
+                <div class="col-md-auto">
+                    <div class="row p-1">
+                        <video class="d-block border border-primary" id="video" autoplay="true"></video>
+                    </div>
+                    <div class="row p-1">
+                        <button type="button" class="btn btn-primary btn-lg btn-block" id="btnPredict">Predict</button>
+                    </div>
+                </div>
             </div>
+            
             <div>
                 <canvas id="c1" width="160" height="96">
 
@@ -43,7 +51,9 @@
             }
         });
 
-        setInterval(function(){
+        // setInterval(function(){
+        $("#btnPredict").on("click", function(e){
+        
             console.log("Is device available: " + is_device_available);
             
             if(is_device_available == true){
@@ -63,6 +73,7 @@
                 request.setRequestHeader("Content-Type", "application/json");
                 request.send(data);
             }
-        }, 5000)
+        })
+        // }, 5000)
     </script>
 </html>
