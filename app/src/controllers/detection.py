@@ -1,13 +1,14 @@
 import io
 import base64
 from PIL import Image
-from flask import request
+from flask import request, render_template
 from flask.views import MethodView
 
 from services.detection import DetectionService
 
 class DetectionController(MethodView):
-    def __init__(self):
+    def __init__(self, modules):
+        self.modules = modules
         self.detection_service = DetectionService()
 
     def post(self):
@@ -24,5 +25,10 @@ class DetectionController(MethodView):
 
             print(f"{label}: {score}")
 
+            if label in self.modules.keys():
+                return render_template(self.modules[label]), 206
+                # return self.modules[label], 206
 
-        return "", 204
+            
+
+        return "NO DATA", 204

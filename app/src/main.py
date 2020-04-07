@@ -23,8 +23,11 @@ def after_request(response):
 
     return response
 
+modules = {"keyboard": "keyboard.html"}
+
 app.add_url_rule("/main", view_func=MainController.as_view("main"))
-app.add_url_rule("/detect", view_func=DetectionController.as_view("detection"))
+app.add_url_rule("/detect", view_func=DetectionController.as_view("detection", modules=modules))
+# app.add_url_rule("/register")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
