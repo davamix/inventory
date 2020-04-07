@@ -4,5 +4,8 @@ services:
     inventory:
         build: ./app
         image: inventory:1.0
+        volumes:
+            # - .:/usr/src/inventory 
+            - ./cache:/root/.cache/torch/checkpoints
         ports:
             - 5000:5000
