@@ -23,7 +23,11 @@ def after_request(response):
 
     return response
 
-modules = {"keyboard": "keyboard.html"}
+# Register module names with the templates
+modules = {
+    "keyboard": "keyboard.html",
+    "tv": "monitor.html"
+    }
 
 app.add_url_rule("/main", view_func=MainController.as_view("main"))
 app.add_url_rule("/detect", view_func=DetectionController.as_view("detection", modules=modules))

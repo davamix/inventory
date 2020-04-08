@@ -26,7 +26,7 @@ class DetectionController(MethodView):
             print(f"{label}: {score}")
 
             if label in self.modules.keys():
-                return render_template(self.modules[label]), 206
+                return render_template(f"modules/{self.modules[label]}"), 206
                 # return self.modules[label], 206
 
             
