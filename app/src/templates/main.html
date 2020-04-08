@@ -17,11 +17,20 @@
                         <video class="d-block border border-primary" id="video" autoplay="true"></video>
                     </div>
                     <div class="row p-1">
-                        <button type="button" class="btn btn-primary btn-lg btn-block" id="btnPredict">Predict</button>
+                        <button type="button" class="btn btn-primary btn-lg btn-block" id="btnDetect">Detect</button>
+                        
                     </div>
                 </div>
-
+                <div class="col-md-auto">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="no-detection-alert">
+                        No object detected!
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                </div>
                 <div class="col-md-auto" id="register-panel">
+                    
                     
                 </div>
             </div>
@@ -56,17 +65,29 @@
             }
         });
 
-        $("#btnPredict").on("click", function(e){
+        $(document).ready(function(){
+            // Hide the "no object detected alert"
+            $("#no-detection-alert").hide();
+        })
+
+        $("#btnDetect").on("click", function(e){
+            // Disable predict button and change the class
+            $("#btnDetect").attr("disabled", true)
+                .removeClass("btn btn-primary")
+                .addClass("progress-bar progress-bar-striped progress-bar-animated bg-info")
+                .html("Detecting...");
         
             console.log("Is device available: " + is_device_available);
             
             if(is_device_available == true){
+                // Grab the image from video
                 var canvas = document.createElement("canvas");
                 canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
 
                 data_url = canvas.toDataURL("image/png");
                 data = JSON.stringify(data_url.replace(/^data:image\/(png|jpg);base64,/, ""));
                 
+                // Create the POST request and send the image to the server
                 request = new XMLHttpRequest();
                 request.addEventListener('readystatechange', (e)=>{
                     if(e.target.readyState == 4 && e.target.status == 200){
@@ -77,10 +98,23 @@
                 request.setRequestHeader("Content-Type", "application/json");
                 request.send(data);
 
+                // Check the response from the server
                 request.onload = function(){
-                    console.log(request.responseText);
+                    // If no object detected, show an alert
+                    if(request.responseText === ""){
+                        $("#no-detection-alert").fadeTo(2000, 500).slideUp(500, function(){
+                            $("#no-detection-alert").slideUp(500);
+                        });
+                    }
 
+                    // Show the module panel
                     $("#register-panel").html(request.responseText);
+
+                    // Change back to the original button class
+                    $("#btnDetect").attr("disabled", false)
+                        .removeClass("progress-bar progress-bar-striped progress-bar-animated bg-info")
+                        .addClass("btn btn-primary")
+                        .html("Detect");
                 };
                     
                 
