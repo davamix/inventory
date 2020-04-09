@@ -7,5 +7,6 @@ services:
         volumes:
             # - .:/usr/src/inventory 
             - ./cache:/root/.cache/torch/checkpoints
+            - ./data:/usr/src/inventory/data
         ports:
             - 5000:5000

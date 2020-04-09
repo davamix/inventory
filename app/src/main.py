@@ -5,6 +5,7 @@ from controllers.main import MainController
 from controllers.detection import DetectionController
 
 from services.detection import DetectionService
+from modules.keyboard import KeyboardModule
 
 # Download model paramaters if needed
 DetectionService()
@@ -23,15 +24,28 @@ def after_request(response):
 
     return response
 
-# Register module names with the templates
-modules = {
-    "keyboard": "keyboard.html",
-    "tv": "monitor.html"
+def load_modules():
+    print("Loading modules...")
+
+    modules = {
+        "keyboard": {
+            "template": "keyboard.html",
+            "instance": KeyboardModule()
+        }
     }
 
-app.add_url_rule("/main", view_func=MainController.as_view("main"))
+    return modules
+
+# Register module names with the templates
+# modules = {
+#     "keyboard": "keyboard.html",
+#     "tv": "monitor.html"
+#     }
+modules = load_modules()
+print(f"Modules loaded: {modules.keys()}")
+
+app.add_url_rule("/main", view_func=MainController.as_view("main", modules=modules))
 app.add_url_rule("/detect", view_func=DetectionController.as_view("detection", modules=modules))
-# app.add_url_rule("/register")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
