@@ -15,15 +15,18 @@ class BaseModule():
             print(f"Table {table} created.")
         except sqlite3.Error as ex:
             print(f"ERROR: {ex}")
+            raise
 
     # TODO: Move emit's to inherited modules
     def save(self, query, params=None):
         try:
             self.__execute(query, params)
-            self.__socket.emit("saved", True)
         except sqlite3.Error as ex:
-            self.__socket.emit("saved", {"error": str(ex)})
             print(f"ERROR: {ex}")
+            raise
+
+    def emit_message(self, endpoint, message):
+        self.__socket.emit(endpoint, message)
 
     def __execute(self, query, params=None):
         conn = sqlite3.connect(self.__database)

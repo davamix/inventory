@@ -27,7 +27,7 @@
 <div class="mt-3">
     <!-- SUCCESS -->
     <div class="alert alert-success alert-dismissible fade show" role="alert" id="saved-alert">
-        <p id="alert-text">Data saved corretly.</p>
+        <p id="alert-text"></p>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -74,14 +74,14 @@
         var socket = io.connect("http://" + document.domain + ":" + location.port);
         socket.on("saved", function(msg){
 
-            if(msg == true){
-                console.log("Data saved");
+            if(msg["success"] == true){
                 $("#module-form").get(0).reset();
+                $("#saved-alert").find("#alert-text").text(msg["message"]);
                 $("#saved-alert").fadeTo(2000, 500).slideUp(500, function(){
                     $("#saved-alert").slideUp(500);
                 });
             }else{
-                $("#no-saved-alert").find("#alert-text").text(msg["error"]);
+                $("#no-saved-alert").find("#alert-text").text(msg["message"]);
                 $("#no-saved-alert").fadeTo(5000, 500).slideUp(500, function(){
                     $("#no-saved-alert").slideUp(500);
                 });

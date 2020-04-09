@@ -17,4 +17,9 @@ class MonitorModule(BaseModule):
             save_query = "INSERT INTO monitor(reference, model, inches, resolution) VALUES (?, ?, ?, ?)"
             params = [data["reference"], data["model"], data["inches"], data["resolution"]]
 
-            self.save(save_query, params)
+            try:
+                self.save(save_query, params)
+                message = f"{self.__module_name} {data['reference']} saved"
+                self.emit_message("saved", {"success": True, "message": message})
+            except Exception as ex:
+                self.emit_message("saved", {"success": False, "message": str(ex)})
