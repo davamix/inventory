@@ -9,11 +9,13 @@ class MainController(MethodView):
         return render_template("main.html", title="Inventory")
 
     def post(self):
-        module_name = request.form["module"]
-        print(request.form)
+        data = request.get_json()
+        
+        module_name = data["module"]
+        print(data)
 
         if module_name:
             module = self.modules[module_name]["instance"]
-            module.save(request.form)
+            module.save_data(data)
 
         return "", 204
